@@ -1,0 +1,18 @@
+name: specs
+channels:
+  - defaults
+dependencies:
+  - python=3.9
+  - matplotlib
+  - numpy
+  - pandas
+  - scipy
+  - earthengine-api
+  - geemap
+  - gdal
+  - scikit-image
+  - geopandas
+  - rasterio
+  - shapely
+  - pywavelets
+prefix: /Users/username/anaconda3/envs/env-name

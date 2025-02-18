@@ -1,0 +1,13 @@
+.ipynb_checkpoints/
+.virtual_documents/
+__pycache__/
+*.qmd
+*.html
+notes.md
+.spyproject/
+assets/
+*.tif
+testing/
+report.ipynb
+script.py
+tests*
