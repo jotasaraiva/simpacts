@@ -93,19 +93,3 @@ def segment_metrics(raster, change, nonchange):
     accuracy = (true_positive + true_negative)/(true_negative + true_positive + false_negative + false_positive)
     
     return {'f1': f1, 'precision': precision, 'recall': recall, 'accuracy': accuracy}, change_mask, nonchange_mask
-
-def save_with_rio(path, img, template):
-    with rio.open(
-         path,
-         'w',
-         driver='GTiff',
-         height=img.shape[0],
-         width=img.shape[1],
-         count=1,
-         dtype=img.dtype,
-         crs='+proj=latlong',
-         transform=template.transform
-    ) as dst:
-        dst.write(img, 1)
-        
-    return True
