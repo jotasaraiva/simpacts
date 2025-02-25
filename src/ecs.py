@@ -1,32 +1,32 @@
 import numpy as np
 
-def ECS(x, time_axis=0, smooth_x=None):
+def ECS(img, band_axis=0, row_axis=1, col_axis=2, smooth_img=None):
     
-    assert len(x.shape) == 3, "'x' is not three-dimensional"
-    mean_image = x.mean(axis=time_axis)
-    
-    if smooth_x is not None:
-        assert len(smooth_x.shape) == 3, "'smooth_x' is not three-dimensional"
-        assert x.shape == smooth_x.shape, "'x' and 'smooth_x' are different shapes"
-        cube = smooth_x.astype(np.float32)
+    assert len(img.shape) == 3, "'img' is not three-dimensional"
+    mean_image = img.mean(axis=band_axis)
+
+    if smooth_img is not None:
+        assert len(smooth_img.shape) == 3, "'smooth_img' is not three-dimensional"
+        assert img.shape == smooth_img.shape, "'img' and 'smooth_img' are different shapes"
+        cube = smooth_img.astype(np.float32)
     else:
-        cube = x
+        cube = img
+
+    bands = cube.shape[band_axis]
+    rows = cube.shape[row_axis]
+    cols = cube.shape[col_axis]
+
+    mean_image = np.reshape(mean_image, (1, rows * cols))
+    D = np.reshape(cube, (bands, rows * cols))
+    D = (D - mean_image) ** 2
+
+    d = D.sum(axis=1)
 
     R = np.empty(mean_image.shape, np.float32)
-    D = np.empty(cube.shape, np.float32)
 
-    dims = mean_image.shape
-    
-    lin = dims[0]
-    col = dims[1]
-    
-    for i in range(0, cube.shape[0]):
-        D[i] = (cube[i] - mean_image)**2
-    
-    d = D.sum(axis=1).sum(axis=1).flatten()
+    for i in range(rows * cols):
+        R[0, i] = np.abs(np.corrcoef(d, D[:, i])[0][1])
 
-    for i in range(lin):
-        for j in range(col):
-            R[i, j] = np.abs(np.corrcoef(d, D[:, i, j])[0][1])
-    
+    R = np.reshape(R, (1, rows, cols))[0]
+
     return R
